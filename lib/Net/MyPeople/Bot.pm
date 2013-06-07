@@ -11,13 +11,13 @@ use JSON;
 use Data::Printer;
 use URI::Escape;
 use File::Util qw(SL);
-use Encode;
+use Encode qw(is_utf8 _utf8_off);
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
 # ABSTRACT: Implements MyPeople-Bot.
 
-our $VERSION = '0.200'; # VERSION
+our $VERSION = '0.300'; # VERSION
 
 
 has apikey=>(
@@ -36,6 +36,8 @@ our $API_GROUP_MEMBERS = $API_BASE . '/group/members.json';
 our $API_GROUP_SEND = $API_BASE . '/group/send.json';
 our $API_GROUP_EXIT = $API_BASE . '/group/exit.json';
 our $API_FILE_DOWNLOAD = $API_BASE . '/file/download.json';
+
+our $API_SEND_LENGTH = 1000;
 
 sub BUILD {
 	my $self = shift;
@@ -130,6 +132,7 @@ sub _call {
 	}
 }
 
+
 sub buddy{
 	my $self = shift;
 	my ($buddyId) = @_;
@@ -146,24 +149,50 @@ sub groupMembers{
 
 sub send{
 	my $self = shift;
-	my ($buddyId, $content, $attach_path) = @_;
+	my ($buddyId, $content, $attach_path, $do_not_split) = @_;
 	if( $attach_path && -f $attach_path ){
 		return $self->_call_multipart($API_SEND, [buddyId=>$buddyId, attach=>[$attach_path]] );
 	}
 	else{
-		return $self->_call($API_SEND, {buddyId=>$buddyId, content=>$content} );
+		my @chunks;
+		if( !$do_not_split && length $content > $API_SEND_LENGTH ){
+			@chunks = split(/(.{$API_SEND_LENGTH})/, $content);
+		}
+		else{
+			push(@chunks,$content);
+		}
+
+		my $res;
+		foreach my $chunk (@chunks){
+			_utf8_off($chunk) if is_utf8 $chunk;
+			$res = $self->_call($API_SEND, {buddyId=>$buddyId, content=>$chunk} );
+		}
+		return $res;
 	}
 }
 
 
 sub groupSend{
 	my $self = shift;
-	my ($groupId, $content, $attach_path) = @_;
+	my ($groupId, $content, $attach_path, $do_not_split) = @_;
 	if( $attach_path && -f $attach_path ){
 		return $self->_call_multipart($API_GROUP_SEND, [groupId=>$groupId, attach=>[$attach_path]] );
 	}
 	else{
-		return $self->_call($API_GROUP_SEND, {groupId=>$groupId, content=>$content} );
+		my @chunks;
+		if( !$do_not_split && length $content > $API_SEND_LENGTH ){
+			@chunks = split(/(.{$API_SEND_LENGTH})/, $content);
+		}
+		else{
+			push(@chunks,$content);
+		}
+
+		my $res;
+		foreach my $chunk (@chunks){
+			_utf8_off($chunk) if is_utf8 $chunk;
+			$res = $self->_call($API_GROUP_SEND, {groupId=>$groupId, content=>$chunk} );
+		}
+		return $res;
 	}
 }
 
@@ -194,7 +223,7 @@ Net::MyPeople::Bot - Implements MyPeople-Bot.
 
 =head1 VERSION
 
-version 0.200
+version 0.300
 
 =head1 SYNOPSIS
 
@@ -212,7 +241,7 @@ version 0.200
 	Log::Log4perl->easy_init($DEBUG); # you can see requests in Net::MyPeople::Bot.
 
 	my $APIKEY = 'OOOOOOOOOOOOOOOOOOOOOOOOOO'; 
-	my $bot = Net::MyPeople::Bot->new({apikey=>$APIKEY});
+	my $bot = Net::MyPeople::Bot->new(apikey=>$APIKEY);
 
 	# You should set up callback url with below informations. ex) http://MYSERVER:8080/callback
 	my $httpd = AnyEvent::HTTPD->new (port => 8080);
@@ -338,7 +367,7 @@ version 0.200
 	print "Bot is started\n";
 	$httpd->run;
 
-=head1 Description
+=head1 DESCRIPTION
 
 MyPeople is an instant messenger service of Daum Communications in Republic of Korea (South Korea).
 
@@ -347,6 +376,8 @@ MyPeople Bot is API interface of MyPeople.
 If you want to use this bot API, 
 Unfortunately,you must have an account for http://www.daum.net.
 And you can understand Korean.
+
+=head2 METHODS
 
 =over 4
 
@@ -400,6 +431,8 @@ returns infos of members in the GROUP.
 
 =item $res = $self->send( BUDDY_ID, TEXT )
 
+=item $res = $self->send( BUDDY_ID, TEXT, undef, $do_not_split )
+
 =item $res = $self->send( BUDDY_ID, undef, FILEPATH )
 
 send text to a buddy.
@@ -409,6 +442,8 @@ If you set FILEPATH, it sends the file to the buddy.
 returns result of request.
 
 =item $res = $self->groupSend( GROUP_ID, TEXT )
+
+=item $res = $self->groupSend( GROUP_ID, TEXT, undef, $do_not_split )
 
 =item $res = $self->groupSend( GROUP_ID, undef, FILEPATH )
 
@@ -434,11 +469,13 @@ returns path of the file saved.
 
 =back
 
-=head2 Callbacks
+=head2 CALLBACK
 
 See SYNOPSIS.
 
-=head1 See Also
+=head1 SEE ALSO
+
+=over
 
 =item *
 
@@ -447,6 +484,8 @@ MyPeople : L<https://mypeople.daum.net/mypeople/web/main.do>
 =item *
 
 MyPeople Bot API Home : L<http://dna.daum.net/apis/mypeople>
+
+=back
 
 =head1 AUTHOR
 

@@ -1,10 +1,40 @@
 ==================================================
-Changes from 2012-05-30 00:00:00 +0000 to present.
+Changes from 2012-06-07 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.200 at 2013-05-30 03:19:03 +0000
+version 0.300 at 2013-06-07 08:20:14 +0000
 ------------------------------------------
+
+  Change: 6a46791bde96726ab0f7b222f0739525e41330c7
+  Author: sng2c <sng2nara@gmail.com>
+  Date : 2013-06-07 17:19:44 +0000
+
+    support for utf8 
+
+  Change: 4d0c35b58dd6c4ca024694e7324612da8e5ff2d3
+  Author: sng2c <sng2nara@gmail.com>
+  Date : 2013-06-05 14:14:52 +0000
+
+    add README.md from POD 
+
+  Change: 44173947cdafc8422eafaedecd9ed390fe06e7af
+  Author: sng2c <sng2nara@gmail.com>
+  Date : 2013-05-30 13:56:44 +0000
+
+    update README.md 
+
+  Change: 71b6ffc644c91f10918e745dbbfa817d940bc4a2
+  Author: sng2c <sng2nara@gmail.com>
+  Date : 2013-05-30 13:56:10 +0000
+
+    update doc. 
+
+  Change: e0afa95c0c7618614a2686e9a5ad43c5f3a0387d
+  Author: sng2c <sng2nara@gmail.com>
+  Date : 2013-05-30 12:22:19 +0000
+
+    update README.md 
 
   Change: 7079dfa034de543c5efbe13bd0afa6e13f612b44
   Author: sng2c <sng2nara@gmail.com>

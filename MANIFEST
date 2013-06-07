@@ -4,7 +4,8 @@ MANIFEST
 META.yml
 Makefile.PL
 README
-README.md
+check_max_len.pl
 dist.ini
 lib/Net/MyPeople/Bot.pm
 t/01-basic.t
+test.pl
