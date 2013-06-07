@@ -33,4 +33,4 @@ requires:
 resources:
   homepage: https://github.com/sng2c/net-mypeople-bot
   repository: git://github.com/sng2c/net-mypeople-bot.git
-version: 0.300
+version: 0.301

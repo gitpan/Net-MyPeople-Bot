@@ -17,7 +17,7 @@ Log::Log4perl->easy_init($ERROR);
 
 # ABSTRACT: Implements MyPeople-Bot.
 
-our $VERSION = '0.300'; # VERSION
+our $VERSION = '0.301'; # VERSION
 
 
 has apikey=>(
@@ -97,7 +97,7 @@ sub _call_multipart {
 	DEBUG p $res;
 
 	if( $res->is_success ){
-		return from_json( $res->content );
+		return from_json( $res->content , {utf8 => 1} );
 	}
 	else{
 		ERROR p $res;
@@ -124,7 +124,7 @@ sub _call {
 	DEBUG p $res;
 	
 	if( $res->is_success ){
-		return from_json( $res->content );
+		return from_json( $res->content , {utf8 => 1} );
 	}
 	else{
 		ERROR p $res;
@@ -223,7 +223,7 @@ Net::MyPeople::Bot - Implements MyPeople-Bot.
 
 =head1 VERSION
 
-version 0.300
+version 0.301
 
 =head1 SYNOPSIS
 
