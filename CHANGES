@@ -1,10 +1,25 @@
 ==================================================
-Changes from 2012-06-07 00:00:00 +0000 to present.
+Changes from 2012-06-10 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.301 at 2013-06-07 08:59:26 +0000
+version 0.310 at 2013-06-10 02:39:49 +0000
 ------------------------------------------
+
+  Change: a95f165c2185a3c3aabaf9fd645d8ab5fa5eb713
+  Author: sng2c <sng2nara@gmail.com>
+  Date : 2013-06-10 11:35:27 +0000
+
+    fix for a weird decoding.
+
+    had support for solved problem was ommitting string after first space
+    on server-side. 
+
+  Change: 7855cb23adfad65cd4280ba5b878acaff311f94d
+  Author: sng2c <sng2nara@gmail.com>
+  Date : 2013-06-07 17:59:44 +0000
+
+    fix bug - parsing json as utf8 
 
   Change: 6a46791bde96726ab0f7b222f0739525e41330c7
   Author: sng2c <sng2nara@gmail.com>

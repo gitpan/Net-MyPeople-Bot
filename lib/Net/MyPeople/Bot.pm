@@ -17,7 +17,7 @@ Log::Log4perl->easy_init($ERROR);
 
 # ABSTRACT: Implements MyPeople-Bot.
 
-our $VERSION = '0.301'; # VERSION
+our $VERSION = '0.310'; # VERSION
 
 
 has apikey=>(
@@ -47,10 +47,6 @@ sub _call_file {
 	my $self = shift;
 	my ($apiurl, $param, $path) = @_;
 	$apiurl .= '?apikey='.uri_escape($self->apikey);
-
-	foreach my $k (keys %{$param}){
-		$param->{$k} = uri_escape($param->{$k});
-	}
 
 	my $req = POST( $apiurl, Content=>$param );
 	DEBUG $req->as_string;
@@ -108,12 +104,6 @@ sub _call {
 	my $self = shift;
 	my ($apiurl, $param) = @_;
 	$apiurl .= '?apikey='.uri_escape($self->apikey);
-
-	foreach my $k (keys %{$param}){
-		my $v = $param->{$k};
-		#$v = Encode::encode('UTF-8',$v);
-		$param->{$k} = uri_escape($v);
-	}
 
 	my $req = POST( $apiurl, 
 		#Content_Type => 'form-data',
@@ -223,7 +213,7 @@ Net::MyPeople::Bot - Implements MyPeople-Bot.
 
 =head1 VERSION
 
-version 0.301
+version 0.310
 
 =head1 SYNOPSIS
 
