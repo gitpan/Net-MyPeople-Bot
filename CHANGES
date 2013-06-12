@@ -1,10 +1,18 @@
 ==================================================
-Changes from 2012-06-10 00:00:00 +0000 to present.
+Changes from 2012-06-12 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.310 at 2013-06-10 02:39:49 +0000
+version 0.320 at 2013-06-12 05:56:33 +0000
 ------------------------------------------
+
+  Change: 92aa7dac0f1c19048c0c98bc73706f6c5458ce02
+  Author: sng2c <sng2nara@gmail.com>
+  Date : 2013-06-12 14:55:55 +0000
+
+    Add mypeople-bot-buffer support.
+
+    see https://github.com/sng2c/mypeople-bot-buffer 
 
   Change: a95f165c2185a3c3aabaf9fd645d8ab5fa5eb713
   Author: sng2c <sng2nara@gmail.com>

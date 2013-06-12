@@ -17,17 +17,26 @@ Log::Log4perl->easy_init($ERROR);
 
 # ABSTRACT: Implements MyPeople-Bot.
 
-our $VERSION = '0.310'; # VERSION
+our $VERSION = '0.320'; # VERSION
+
 
 
 has apikey=>(
-	is=>'rw'
+	is=>'rw',
+	required=>1
+);
+
+
+has web_proxy_base=>(
+	is=>'rw',
 );
 
 has ua=>(
 	is=>'ro',
-	default=>sub{return LWP::UserAgent->new;}
+	default=>sub{return LWP::UserAgent->new;},
 );
+
+
 
 our $API_BASE = 'https://apis.daum.net/mypeople';
 our $API_SEND = $API_BASE . '/buddy/send.json';
@@ -47,6 +56,7 @@ sub _call_file {
 	my $self = shift;
 	my ($apiurl, $param, $path) = @_;
 	$apiurl .= '?apikey='.uri_escape($self->apikey);
+	$apiurl = $self->web_proxy_base.$apiurl if $self->web_proxy_base;
 
 	my $req = POST( $apiurl, Content=>$param );
 	DEBUG $req->as_string;
@@ -78,6 +88,7 @@ sub _call_multipart {
 	my $self = shift;
 	my ($apiurl, $param) = @_;
 	$apiurl .= '?apikey='.$self->apikey;
+	$apiurl = $self->web_proxy_base.$apiurl if $self->web_proxy_base;
 
 	#foreach my $k (keys %{$param}){
 	#	$param->{$k} = uri_escape($param->{$k});
@@ -104,6 +115,7 @@ sub _call {
 	my $self = shift;
 	my ($apiurl, $param) = @_;
 	$apiurl .= '?apikey='.uri_escape($self->apikey);
+	$apiurl = $self->web_proxy_base.$apiurl if $self->web_proxy_base;
 
 	my $req = POST( $apiurl, 
 		#Content_Type => 'form-data',
@@ -213,7 +225,7 @@ Net::MyPeople::Bot - Implements MyPeople-Bot.
 
 =head1 VERSION
 
-version 0.310
+version 0.320
 
 =head1 SYNOPSIS
 
@@ -366,6 +378,21 @@ MyPeople Bot is API interface of MyPeople.
 If you want to use this bot API, 
 Unfortunately,you must have an account for http://www.daum.net.
 And you can understand Korean.
+
+=head2 PROPERTIES 
+
+=over 4
+
+=item apikey 
+
+required. put here MyPeople Bot APIKEY.
+
+=item web_proxy_base
+
+optional. If you don't have public IP, use L<https://github.com/sng2c/mypeople-bot-buffer> and put here as 'http://HOST:IP/proxy/'.
+All of API urls are affected like 'http://HOST:IP/proxy/http://...'. 
+
+=back
 
 =head2 METHODS
 
